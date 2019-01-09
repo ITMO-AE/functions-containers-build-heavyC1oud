@@ -1,18 +1,30 @@
+#include <iostream>
 #include <vector>
 #include <string>
+#include <assert.h>
 
 using namespace std;
 
+static const int minLength = 3;
+
 bool IsPalindrom(string data)
 {
+
+    // проверка на пустую строку
+    if(data[0] == 0) {
+        cout << "empty string" << endl;
+
+        return false;
+    }
+
+    // указатели на начало и конец строки
     string::iterator beginIt, endIt;
 
-	// указатели на начало и конец строки
     beginIt = data.begin();
     endIt = data.end() - 1;
 
-	// последовательное сравнение всех символов
-	// в случае несовпадения значений - строка не считается палиндромом
+    // последовательное сравнение всех символов
+    // в случае несовпадения значений - строка не считается палиндромом
     while(beginIt < endIt) {
         if ((*beginIt) != (*endIt)) {
             return false;
@@ -27,16 +39,17 @@ bool IsPalindrom(string data)
 
 vector <string> PalindromFilter(vector <string> words, int minLength)
 {
+    assert(minLength >= 0);
+
     vector <string> returnWords;
 
-    // перебор всех элементов вектора с проверкой на полиндром
-    // при нахождении полиндрома и выполнении условия его минимального размера
+    // перебор всех элементов вектора с проверкой выполнения условия его минимального размера
+    // и проверкой на палиндром, если условия удовлетворяются
     // элемент копируется в возвращаемый вектор
-    for(uint8_t i = 0; i < words.size(); i++) {
-        if(IsPalindrom(words[i])) {
-
-            if((words[i].size()) >= (static_cast<unsigned int>(minLength))) {
-                returnWords.push_back(words[i]);
+    for(auto i: words) {
+        if((i.size()) >= (static_cast<unsigned int>(minLength))) {
+            if(IsPalindrom(i)) {
+                returnWords.push_back(i);
             }
         }
     }
@@ -46,5 +59,27 @@ vector <string> PalindromFilter(vector <string> words, int minLength)
 
 int main()
 {
+    vector <string> words;
+    vector <string> palindromWords;
+    string word;
+
+    // ввод списка слов
+    cout << "enter some words, then enter \"end\" " << endl;
+
+    cin >> word;
+
+    while(word != "end") {
+        words.push_back(word);
+        cin >> word;
+    }
+
+    // фильтр палиндромов определенной величины
+    palindromWords = PalindromFilter(words, minLength);
+
+    // вывод отфильтрованных палиндромов
+    for(auto i: palindromWords) {
+        cout << i << endl;
+    }
+
     return 0;
 }
